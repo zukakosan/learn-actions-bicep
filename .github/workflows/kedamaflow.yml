@@ -24,7 +24,6 @@ jobs:
         with:
           scope: subscription
           region: ${{ env.LOCATION }}
-          resource-group: ${{ env.RESOURCEGROUP_NAME }}
           template: ./deploy/rg.bicep
           parameters: rgname=${{ env.RESOURCEGROUP_NAME }} location=${{ env.LOCATION }}
           deploymentMode: Validate
