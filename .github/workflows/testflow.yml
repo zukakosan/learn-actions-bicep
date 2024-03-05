@@ -11,10 +11,10 @@ permissions:
   id-token: write
   contents: read
 
-  env:
-  RESOURCEGROUP_NAME: 20240305-actions-rg
-  ENVIRONMENT: prod
-  LOCATION: japaneast
+env:
+RESOURCEGROUP_NAME: 20240305-actions-rg
+ENVIRONMENT: prod
+LOCATION: japaneast
 
 jobs:
   create-rg:
