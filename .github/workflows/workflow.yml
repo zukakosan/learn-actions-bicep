@@ -25,7 +25,7 @@ jobs:
           scope: subscription
           deploymentName: ${{ github.run_number }}
           template: ./deploy/rg.bicep
-          parameters: rgName=${{ env.RESOURCEGROUP_NAME }}
+          parameters: rgname=${{ env.RESOURCEGROUP_NAME }}
       - uses: azure/arm-deploy@v1
         with:
           deploymentName: ${{ github.run_number }}
