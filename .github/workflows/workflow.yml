@@ -1,6 +1,12 @@
 name: deploy-toy-website
+concurrency: kedama
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'deploy/**'
 
 permissions:
   id-token: write
