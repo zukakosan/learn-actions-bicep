@@ -9,6 +9,7 @@ permissions:
 env:
   RESOURCEGROUP_NAME: 20240305-actions-rg
   ENVIRONMENT: prod
+  LOCATION: japaneast
 
 jobs:
   deploy:
@@ -25,7 +26,7 @@ jobs:
           scope: subscription
           deploymentName: ${{ github.run_number }}
           template: ./deploy/rg.bicep
-          parameters: rgname=${{ env.RESOURCEGROUP_NAME }}
+          parameters: rgname=${{ env.RESOURCEGROUP_NAME }} location=${{ env.LOCATION }}
       - uses: azure/arm-deploy@v1
         with:
           deploymentName: ${{ github.run_number }}
