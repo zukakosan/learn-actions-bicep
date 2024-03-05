@@ -1,6 +1,6 @@
 name: deploy-toy-website
 
-on: [workflow_dispatch]
+on: [push]
 
 permissions:
   id-token: write
@@ -20,7 +20,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      - uses: azure/arm-deploy
+      - uses: azure/arm-deploy@v1
         with:
           deploymentName: ${{ github.run_number }}
           resourceGroupName: ${{ env.RESOURCEGROUP_NAME }}
