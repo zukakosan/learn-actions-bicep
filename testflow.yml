@@ -1,0 +1,80 @@
+name: kedama
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'deploy/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+  env:
+  RESOURCEGROUP_NAME: 20240305-actions-rg
+  ENVIRONMENT: prod
+  LOCATION: japaneast
+
+jobs:
+  create-rg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: azure/arm-deploy@v1
+        with:
+          scope: subscription
+          resource-group: ${{ env.RESOURCEGROUP_NAME }}
+          template: ./deploy/rg.bicep
+          parameters: rgname=${{ env.RESOURCEGROUP_NAME }} location=${{ env.LOCATION }}
+          deploymentMode: Validate
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Run Bicep linter
+        script: |
+          az bicep build --file ./deploy/main.bicep
+  
+  preflight: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - uses: azure/arm-deploy@v1
+        with:
+          deploymentName: ${{ github.run_number }}
+          resourceGroupName: ${{ env.RESOURCEGROUP_NAME }}
+          template: ./deploy/main.bicep
+          parameters: environmentType=${{env.ENVIRONMENT}}
+          deploymentMode: Validate
+
+  deployResources:
+    needs: [create-rg, lint, preflight]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: azure/login@v1
+        name: Login to Azure
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      # - uses: azure/arm-deploy@v1
+      #   with:
+      #     scope: subscription
+      #     region: ${{ env.LOCATION }}
+      #     deploymentName: ${{ github.run_number }}
+      #     template: ./deploy/rg.bicep
+      #     parameters: rgname=${{ env.RESOURCEGROUP_NAME }} location=${{ env.LOCATION }}
+      - uses: azure/arm-deploy@v1
+        with:
+          failOnStdError: false
+          deploymentName: ${{ github.run_number }}
+          resourceGroupName: ${{ env.RESOURCEGROUP_NAME }}
+          template: ./deploy/main.bicep
+          parameters: environmentType=${{env.ENVIRONMENT}}
