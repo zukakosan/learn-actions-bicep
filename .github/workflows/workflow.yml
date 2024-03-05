@@ -1,18 +1,20 @@
 name: deploy-toy-website
 
-on: [workflow_dispatch]
+on: [push]
 
 permissions:
   id-token: write
   contents: read
 
+env:
+  RESOURCEGROUP_NAME: 20240305-actions-rg
+  ENVIRONMENT: prod
+
 jobs:
-  say-hello:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: repo
       - uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -20,6 +22,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - uses: azure/arm-deploy
         with:
-          resourceGroupName: ${{ env.AZURE_RESOURCE_GROUP }}
-          template: repo/azuredeploy.json
-          parameters: environmentType=Prod
+          deploymentName: ${{ github.run_number }}
+          resourceGroupName: ${{ env.RESOURCEGROUP_NAME }}
+          template: ./deploy/main.bicep
+          parameters: environmentType=${{env.ENVIRONMENT}}
