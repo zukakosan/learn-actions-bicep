@@ -56,7 +56,7 @@ var toyManualsStorageAccountConnectionString = 'DefaultEndpointsProtocol=https;A
 
 
 
-
+// deploy app service plan
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: appServicePlanName
   location: location
