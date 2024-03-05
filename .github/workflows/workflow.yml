@@ -1,5 +1,5 @@
 name: deploy-toy-website
-concurrency: kedama
+concurrency: kedamatest
 
 on:
   push:
