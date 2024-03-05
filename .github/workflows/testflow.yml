@@ -12,9 +12,9 @@ permissions:
   contents: read
 
 env:
-RESOURCEGROUP_NAME: 20240305-actions-rg
-ENVIRONMENT: prod
-LOCATION: japaneast
+  RESOURCEGROUP_NAME: 20240305-actions-rg
+  ENVIRONMENT: prod
+  LOCATION: japaneast
 
 jobs:
   create-rg:
