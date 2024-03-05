@@ -33,8 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Run Bicep linter
-        script: |
-          az bicep build --file ./deploy/main.bicep
+        run: az bicep build --file ./deploy/main.bicep
 
   preflight:
     runs-on: ubuntu-latest
