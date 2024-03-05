@@ -21,7 +21,9 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - uses: azure/arm-deploy@v1
+        with:
           scope: subscription
+          deploymentName: ${{ github.run_number }}
           template: ./deploy/rg.bicep
           parameters: rgName=${{ env.RESOURCEGROUP_NAME }}
       - uses: azure/arm-deploy@v1
