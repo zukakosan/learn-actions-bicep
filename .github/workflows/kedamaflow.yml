@@ -21,13 +21,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - uses: azure/arm-deploy@v1
         with:
           scope: subscription
           region: ${{ env.LOCATION }}
           template: ./deploy/rg.bicep
           parameters: rgname=${{ env.RESOURCEGROUP_NAME }} location=${{ env.LOCATION }}
-          deploymentMode: Validate
 
   lint:
     runs-on: ubuntu-latest
