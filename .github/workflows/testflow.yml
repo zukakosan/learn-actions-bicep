@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'deploy/**'
+      - "deploy/**"
 
 permissions:
   id-token: write
@@ -35,8 +35,8 @@ jobs:
         name: Run Bicep linter
         script: |
           az bicep build --file ./deploy/main.bicep
-  
-  preflight: 
+
+  preflight:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
