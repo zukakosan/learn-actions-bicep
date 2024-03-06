@@ -1,3 +1,4 @@
+// add the following code to the main.bicep file
 @description('The Azure region into which the resources should be deployed.')
 param location string = resourceGroup().location
 

@@ -74,7 +74,7 @@ jobs:
         resourceGroupName: ${{ env.RESOURCEGROUP_NAME }}
         template: ./deploy/main.bicep
         parameters: environmentType=${{env.ENVIRONMENT}}
-        addiionalaArguments: --what-if
+        additionalaArguments: --what-if
 
 
   deployResources:
