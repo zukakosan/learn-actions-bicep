@@ -1,4 +1,3 @@
-// This is a Bicep file that deploys an Azure App Service and an Azure Storage Account.
 @description('The Azure region into which the resources should be deployed.')
 param location string = resourceGroup().location
 
