@@ -77,11 +77,13 @@ jobs:
         additionalArguments: --what-if
 
 
-  deployResources:
+  deploy:
     # needs: [create-rg, lint, preflight]
     runs-on: ubuntu-latest
     needs: what-if
     environment: website
+    outputs:
+      appServiceAppHostName: ${{ steps.deployaction.outputs.appServiceAppHostName }}
     steps:
       - uses: actions/checkout@v3
       - uses: azure/login@v1
@@ -91,9 +93,24 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - uses: azure/arm-deploy@v1
+        id: deployaction
         with:
           failOnStdError: false
           deploymentName: ${{ github.run_number }}
           resourceGroupName: ${{ env.RESOURCEGROUP_NAME }}
           template: ./deploy/main.bicep
           parameters: environmentType=${{env.ENVIRONMENT}}
+  
+  smoke-test:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+         $container = New-PesterContainer
+          -Path 'deploy/website.tests.ps1' `
+          -Data @{ HostName = '${{ needs.deploy.outputs.appServiceAppHostName }}' }
+         Invoke-Pester -Container $container `
+          -CI `
+        name: somoke-test
+        shell: pwsh
